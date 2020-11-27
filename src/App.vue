@@ -28,6 +28,12 @@ export default {
       navBar: {
         isOpened: false
       },
+      search: {
+        isOpened: false
+      },
+      alarm: {
+        isOpened: false
+      },
       user: {
         isLogined: false
       }
@@ -38,6 +44,7 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Castoro:ital@0&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap");
 .app {
   width: 100%;
   height: 100%;
@@ -45,30 +52,35 @@ export default {
   grid-template-columns: repeat(12, 1fr);
 }
 .headbar {
-  grid-area: 1 / 1 / 2 / 13;
+  grid-column: 1/ 13;
 }
 .navigation {
-  grid-area: 2 / 1 / 3 / 13;
+  grid-column: 1/ 13;
+  padding-top: 56px;
 }
 .index {
-  grid-area: 3 / 1 / 4 / 13;
+  grid-column: 1/ 13;
+}
+.myWish,
+.sortUp,
+.sortHits {
+  width: 100%;
+  font-family: "Do Hyeon", sans-serif;
 }
 /* 모바일 버전일 때 */
 @media (max-width: 600px) {
   .app {
-    width: 100%;
-    height: 100%;
-    display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
   .headbar {
-    grid-area: 1 / 1 / 2 / 5;
+    grid-column: 1/ 5;
   }
   .navigation {
     display: none;
   }
   .index {
-    grid-area: 2 / 1 / 3 / 5;
+    padding-top: 56px;
+    grid-column: 1/ 5;
   }
 }
 </style>

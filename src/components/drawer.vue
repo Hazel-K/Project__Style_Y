@@ -7,7 +7,7 @@
           style="font-size: 2.3rem; margin-right: 16px; cursor: pointer;"
           @click="closeNav"
         >
-          list
+          keyboard_backspace
         </span>
         <span class="header__title" style="cursor: default;">
           <span class="pc-mode">Y Don't Use? </span>
@@ -46,7 +46,7 @@ export default {
 <style scoped>
 .navBar {
   position: fixed;
-  z-index: 10;
+  z-index: 999;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);

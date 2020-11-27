@@ -48,6 +48,7 @@ export default {
 .headbar {
   font-family: "Castoro", serif;
   font-size: 1.8rem;
+  z-index: 998;
   position: fixed;
   width: 100%;
   height: 56px;

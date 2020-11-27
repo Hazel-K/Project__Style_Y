@@ -1,17 +1,23 @@
 <template>
   <div class="index">
-    내가 메인이여
+    <sortUp></sortUp>
+    <sortHits></sortHits>
+    <myWish></myWish>
   </div>
 </template>
 
 <script>
-export default {};
+import sortUp from "@/components/sortUp";
+import sortHits from "@/components/sortHits";
+import myWish from "@/components/myWish";
+export default {
+  components: { myWish, sortUp, sortHits }
+};
 </script>
 
 <style scoped>
 .index {
   width: 100%;
-  height: 1000px;
   background-color: #f9f9f9;
 }
 </style>
