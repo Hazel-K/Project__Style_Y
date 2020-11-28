@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <drawer v-if="navBar.isOpened" :user="user"></drawer>
-    <headbar></headbar>
+    <headbar> </headbar>
     <navigation></navigation>
     <router-view></router-view>
   </div>
@@ -12,6 +12,7 @@ import { eventBus } from "@/main";
 import headbar from "./components/headbar";
 import drawer from "./components/drawer";
 import navigation from "@/components/navigation";
+
 export default {
   components: { headbar, drawer, navigation },
   created() {
@@ -23,15 +24,17 @@ export default {
       this.navBar.isOpened = false;
     });
   },
+  mounted() {
+    document.addEventListener("click", e => {
+      // console.log(e.target.className);
+      if (e.target.className === "navBar") {
+        eventBus.$emit("closeNav");
+      }
+    });
+  },
   data() {
     return {
       navBar: {
-        isOpened: false
-      },
-      search: {
-        isOpened: false
-      },
-      alarm: {
         isOpened: false
       },
       user: {

@@ -14,15 +14,19 @@
       </span>
     </div>
     <div class="second__menu menus">
+      <search v-if="search.isOpened"></search>
+      <alarm v-if="alarm.isOpened"></alarm>
       <span
         class="material-icons icon__2-1"
         style="font-size: 2.3rem; margin-right: 12px; cursor: pointer;"
+        @click="toggleSearch"
       >
         search
       </span>
       <span
         class="material-icons icon__2-2"
         style="font-size: 2.3rem; cursor: pointer;"
+        @click="toggleAlarm"
       >
         notifications_none
       </span>
@@ -32,13 +36,31 @@
 
 <script>
 import { eventBus } from "@/main";
+import search from "@/components/search";
+import alarm from "@/components/alarm";
 export default {
+  components: { search, alarm },
   data() {
-    return {};
+    return {
+      search: {
+        isOpened: false
+      },
+      alarm: {
+        isOpened: false
+      }
+    };
   },
   methods: {
     openNav() {
       eventBus.$emit("openNav");
+    },
+    toggleSearch() {
+      if (this.alarm.isOpened) this.alarm.isOpened = false;
+      this.search.isOpened = !this.search.isOpened;
+    },
+    toggleAlarm() {
+      if (this.search.isOpened) this.search.isOpened = false;
+      this.alarm.isOpened = !this.alarm.isOpened;
     }
   }
 };
@@ -63,6 +85,7 @@ export default {
 }
 .second__menu {
   justify-self: flex-end;
+  position: relative;
 }
 /* 모바일 버전일 때 */
 @media (max-width: 600px) {
