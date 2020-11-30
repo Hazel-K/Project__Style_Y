@@ -9,13 +9,15 @@
         >
           keyboard_backspace
         </span>
-        <span class="header__title" style="cursor: default;">
+        <span class="header__title" style="cursor: pointer;" @click="toHome">
           <span class="pc-mode">Y Don't Use? </span>
           <span>Style_Y</span>
         </span>
       </div>
       <div class="navMenus__2">
-        <div class="loginInfo" v-if="user.isLogined">내가 보입니꺼</div>
+        <div class="loginInfo" v-if="$store.state.user.isLogined">
+          내가 보입니꺼
+        </div>
         <div class="notLoginInfo" v-else>
           <span
             class="material-icons"
@@ -24,7 +26,9 @@
             report_problem
           </span>
           <span style="cursor: default;">아직 로그인 하지 않았습니다.</span>
-          <span class="button">로그인</span>
+          <span class="button" @click="$router.push({ name: 'Login' })">
+            로그인
+          </span>
         </div>
       </div>
     </div>
@@ -34,8 +38,14 @@
 <script>
 import { eventBus } from "@/main";
 export default {
-  props: ["user"],
   methods: {
+    toHome() {
+      if (this.$route.name !== "Index") {
+        this.$router.push({ name: "Index" });
+      } else {
+        this.closeNav();
+      }
+    },
     closeNav() {
       eventBus.$emit("closeNav");
     }

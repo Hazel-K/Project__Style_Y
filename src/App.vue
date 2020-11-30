@@ -1,46 +1,43 @@
 <template>
   <div class="app">
-    <drawer v-if="navBar.isOpened" :user="user"></drawer>
-    <headbar> </headbar>
-    <navigation></navigation>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { eventBus } from "@/main";
-import headbar from "./components/headbar";
-import drawer from "./components/drawer";
-import navigation from "@/components/navigation";
-
 export default {
-  components: { headbar, drawer, navigation },
   created() {
     eventBus.$on("openNav", () => {
       // 이벤트 버스에서는 this가 이 객체를 가리키게 하기 위해 애로우 펑션 사용
-      this.navBar.isOpened = true;
+      this.$store.state.dynamicMenus.navBar.isOpened = true;
     });
     eventBus.$on("closeNav", () => {
-      this.navBar.isOpened = false;
+      this.$store.state.dynamicMenus.navBar.isOpened = false;
     });
   },
   mounted() {
     document.addEventListener("click", e => {
       // console.log(e.target.className);
+      const eventList = [
+        "material-icons icon__2-1",
+        "material-icons icon__2-2"
+      ];
+      for (let i = 0; i < eventList.length; i++) {
+        if (e.target.className === eventList[i]) {
+          return;
+        }
+      }
       if (e.target.className === "navBar") {
         eventBus.$emit("closeNav");
       }
-    });
-  },
-  data() {
-    return {
-      navBar: {
-        isOpened: false
-      },
-      user: {
-        isLogined: false
+      if (e.target.className !== "searchContent") {
+        eventBus.$emit("closeSearch");
       }
-    };
+      if (e.target.className !== "alarm") {
+        eventBus.$emit("closeAlarm");
+      }
+    });
   }
 };
 </script>
@@ -48,27 +45,32 @@ export default {
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Castoro:ital@0&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 .app {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  overflow-x: hidden;
 }
-.headbar {
+.index,
+.search,
+.headbar,
+.navigation,
+.sortUp,
+.sortHits,
+.myWish {
   grid-column: 1/ 13;
 }
 .navigation {
-  grid-column: 1/ 13;
   padding-top: 56px;
 }
-.index {
-  grid-column: 1/ 13;
-}
-.myWish,
 .sortUp,
-.sortHits {
+.sortHits,
+.myWish {
   width: 100%;
   font-family: "Do Hyeon", sans-serif;
+  background-color: #f9f9f9;
 }
 /* 모바일 버전일 때 */
 @media (max-width: 600px) {
@@ -81,8 +83,12 @@ export default {
   .navigation {
     display: none;
   }
-  .index {
+  .sortUp {
     padding-top: 56px;
+  }
+  .sortUp,
+  .sortHits,
+  .myWish {
     grid-column: 1/ 5;
   }
 }

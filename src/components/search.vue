@@ -1,8 +1,22 @@
 <template>
   <div class="search">
-    <form id="searchFrm" name="searchFrm" action="" method="POST">
-      <input id="searchString" type="text" placeholder="상품명으로 검색" />
-      <span class="material-icons" style="font-size: 2rem;">
+    <form
+      id="searchFrm"
+      class="searchContent"
+      name="searchFrm"
+      action=""
+      method="POST"
+    >
+      <input
+        id="searchString"
+        class="searchContent"
+        type="text"
+        placeholder="상품명으로 검색"
+      />
+      <span
+        class="material-icons searchContent"
+        style="font-size: 2rem; cursor: pointer;"
+      >
         forward
       </span>
     </form>
@@ -17,7 +31,7 @@
   top: 50px;
   left: -265px;
   background-color: whitesmoke;
-  border-radius: 20px;
+  border-radius: 10px;
   display: flex;
   align-content: center;
   justify-content: center;
