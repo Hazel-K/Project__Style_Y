@@ -34,8 +34,13 @@ Swiper.use([Navigation, Pagination, Mousewheel]);
 // import Swiper styles
 import "swiper/swiper-bundle.css";
 export default {
+  data() {
+    return {
+      mySwiper: null
+    };
+  },
   mounted() {
-    const mySwiper = new Swiper(".swiper-container", {
+    this.mySwiper = new Swiper(".swiper-container", {
       loop: true,
       mousewheel: true,
       pagination: {
@@ -48,7 +53,7 @@ export default {
       }
     });
     setInterval(() => {
-      mySwiper.slideNext();
+      this.mySwiper.slideNext();
     }, 3000);
   }
 };

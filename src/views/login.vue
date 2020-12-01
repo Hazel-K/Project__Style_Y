@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div class="Container">
+    <div class="container">
       <div class="title"><h1>로그인</h1></div>
       <div class="content">
         <form action="" id="loginFrm" method="POST">
@@ -70,7 +70,7 @@ h1 {
   height: 100%;
   background-color: #f9f9f9;
 }
-.Container {
+.container {
   width: 350px;
   height: 300px;
   overflow: hidden;
