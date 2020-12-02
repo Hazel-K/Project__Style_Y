@@ -19,7 +19,8 @@ export default new Vuex.Store({
     },
     // 유저 정보 컨트롤
     user: {
-      isLogined: false
+      isLogined: true,
+      isAdmin: true
     }
   },
   mutations: {},

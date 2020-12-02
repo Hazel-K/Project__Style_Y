@@ -16,7 +16,7 @@
       </div>
       <div class="navMenus__2">
         <div class="loginInfo" v-if="$store.state.user.isLogined">
-          내가 보입니꺼
+          <userMenu></userMenu>
         </div>
         <div class="notLoginInfo" v-else>
           <span
@@ -36,8 +36,10 @@
 </template>
 
 <script>
+import userMenu from "@/components/userMenu";
 import { eventBus } from "@/main";
 export default {
+  components: { userMenu },
   methods: {
     toHome() {
       if (this.$route.name !== "Index") {

@@ -15,13 +15,18 @@ export default {
     eventBus.$on("closeNav", () => {
       this.$store.state.dynamicMenus.navBar.isOpened = false;
     });
+    // eventBus.$on("wrongAccess", () => {
+    //   alert("잘못된 접근입니다.");
+    //   this.$router.push({ name: "Index" });
+    // });
   },
   mounted() {
     document.addEventListener("click", e => {
       // console.log(e.target.className);
       const eventList = [
         "material-icons icon__2-1",
-        "material-icons icon__2-2"
+        "material-icons icon__2-2",
+        "material-icons searchContent"
       ];
       for (let i = 0; i < eventList.length; i++) {
         if (e.target.className === eventList[i]) {
@@ -59,10 +64,23 @@ export default {
 .navigation,
 .sortUp,
 .sortHits,
-.myWish {
+.myWish,
+.mypage,
+.chkUser,
+.chkShip,
+.buyList,
+.wishList,
+.report,
+.admin {
   grid-column: 1/ 13;
 }
-.navigation {
+.navigation,
+.chkUser,
+.chkShip,
+.buyList,
+.wishList,
+.report,
+.admin {
   padding-top: 56px;
 }
 .sortUp,
@@ -88,7 +106,14 @@ export default {
   }
   .sortUp,
   .sortHits,
-  .myWish {
+  .myWish,
+  .mypage,
+  .chkUser,
+  .chkShip,
+  .buyList,
+  .wishList,
+  .report,
+  .admin {
     grid-column: 1/ 5;
   }
 }
