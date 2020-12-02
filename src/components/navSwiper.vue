@@ -29,8 +29,8 @@
 
 <script>
 // import Swiper JS
-import Swiper, { Mousewheel, Navigation, Pagination } from "swiper";
-Swiper.use([Navigation, Pagination, Mousewheel]);
+import Swiper, { Mousewheel, Navigation, Pagination, Autoplay } from "swiper";
+Swiper.use([Navigation, Pagination, Mousewheel, Autoplay]);
 // import Swiper styles
 import "swiper/swiper-bundle.css";
 export default {
@@ -43,6 +43,10 @@ export default {
     this.mySwiper = new Swiper(".swiper-container", {
       loop: true,
       mousewheel: true,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false
+      },
       pagination: {
         el: ".swiper-pagination",
         dynamicBullets: true
@@ -52,9 +56,6 @@ export default {
         prevEl: ".swiper-button-prev"
       }
     });
-    setInterval(() => {
-      this.mySwiper.slideNext();
-    }, 3000);
   }
 };
 </script>
