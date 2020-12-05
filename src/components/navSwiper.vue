@@ -62,7 +62,7 @@ export default {
 
 <style scoped>
 .swiper-container {
-  width: 800px;
+  width: 900px;
   height: 100%;
 }
 .swiper-slide {

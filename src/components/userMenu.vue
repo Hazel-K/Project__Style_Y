@@ -58,7 +58,7 @@ export default {
       this.$router.push({ name: menuName }).catch(() => {}); // 이미 페이지 이동한 상태에서 다시 이동하려고 하니 오류가 생기므로, catch문으로 없애준다.
     },
     logout() {
-      console.log("logout");
+      eventBus.$emit("logout");
     }
   }
 };

@@ -15,6 +15,13 @@ export default {
     eventBus.$on("closeNav", () => {
       this.$store.state.dynamicMenus.navBar.isOpened = false;
     });
+    eventBus.$on("logout", () => {
+      this.$store.state.user.isLogined = false;
+      if (this.$route.name !== "Index") {
+        this.$router.push({ name: "Index" });
+      }
+      eventBus.$emit("closeNav");
+    });
     // eventBus.$on("wrongAccess", () => {
     //   alert("잘못된 접근입니다.");
     //   this.$router.push({ name: "Index" });

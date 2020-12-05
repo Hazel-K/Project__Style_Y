@@ -3,13 +3,29 @@
     <div class="container">
       <div class="title"><h1>회원가입</h1></div>
       <div class="content">
-        <form action="" id="joinFrm" name="joinFrm" method="POST">
+        <form
+          action=""
+          id="joinFrm"
+          name="joinFrm"
+          method="POST"
+          @submit="joinProc"
+        >
           <div class="userBox boxes">
-            <input type="text" id="username" placeholder="아이디" />
+            <input
+              type="text"
+              id="username"
+              v-model="user.username"
+              placeholder="아이디"
+            />
             <span class="chkUsername chk"></span>
           </div>
           <div class="passwordBox boxes">
-            <input type="password" id="password" placeholder="비밀번호" />
+            <input
+              type="password"
+              id="password"
+              v-model="user.password"
+              placeholder="비밀번호"
+            />
             <span class="chkPassword chk"></span>
           </div>
           <div class="rePassBox boxes">
@@ -20,10 +36,10 @@
             />
             <span class="chkRePassword chk"></span>
           </div>
-          <div class="nicknameBox boxes">
+          <!-- <div class="nicknameBox boxes">
             <input type="text" id="nickname" placeholder="별명" />
             <span class="chkNickname chk"></span>
-          </div>
+          </div> -->
           <div class="iptAddr">
             <input
               type="text"
@@ -36,13 +52,13 @@
           </div>
           <input type="text" id="addr" placeholder="주소" readonly />
           <input type="text" id="specAddr" placeholder="상세주소" readonly />
-          <div class="iptFullname">
+          <!-- <div class="iptFullname">
             <input type="text" id="fullname" placeholder="이름" readonly />
             <v-btn x-small class="searchName" @click="searchName"
               >본인인증</v-btn
             >
-          </div>
-          <div class="iptIdnum">
+          </div> -->
+          <!-- <div class="iptIdnum">
             <input
               type="text"
               id="frontNum"
@@ -56,7 +72,7 @@
               placeholder="●●●●●●●"
               readonly
             />
-          </div>
+          </div> -->
           <div class="phoneNum">
             <input
               type="text"
@@ -68,7 +84,7 @@
               >휴대폰인증</v-btn
             >
           </div>
-          <v-btn class="joinProc" @click="joinProc">회원가입</v-btn>
+          <v-btn class="joinProc" @click="joinProc">가입하기</v-btn>
           <div class="toMenu">
             <a href="/login">로그인으로</a>
             <a href="/">홈으로</a>
@@ -80,7 +96,23 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  data() {
+    return {
+      isAccountAvailable: false,
+      isAccountAuthorized: false,
+      isPasswordAvailable: false,
+      isPasswordCorrespond: false,
+      isNicknameAvailable: false,
+      user: {
+        username: null,
+        password: null,
+        password2: null,
+        nickname: null
+      }
+    };
+  },
   methods: {
     searchAddr() {
       console.log("searchAddr");
@@ -92,7 +124,16 @@ export default {
       console.log("searchPhone");
     },
     joinProc() {
-      console.log("joinProc");
+      const { username, password } = this.user;
+
+      axios
+        .post("/joinProc", {
+          username,
+          password
+        })
+        .then(function(res) {
+          console.log(res);
+        });
     }
   }
 };
@@ -167,6 +208,7 @@ input {
 
 .joinProc {
   margin-top: 15px;
+  font-weight: bold;
 }
 
 .toMenu {

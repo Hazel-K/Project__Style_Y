@@ -4,7 +4,7 @@
       v-if="$store.state.dynamicMenus.navBar.isOpened"
       :user="$store.state.user"
     ></drawer>
-    <headbar> </headbar>
+    <headbar></headbar>
     <navigation></navigation>
     <sortUp></sortUp>
     <sortHits></sortHits>

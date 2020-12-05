@@ -47,7 +47,9 @@ export default {
         password.focus();
         return;
       }
-      document.querySelector("#loginFrm").submit();
+      // document.querySelector("#loginFrm").submit();
+      this.$store.state.user.isLogined = true;
+      this.$router.push({ name: "Index" });
     }
   }
 };

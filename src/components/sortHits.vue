@@ -23,6 +23,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
