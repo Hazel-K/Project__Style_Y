@@ -25,6 +25,11 @@ const routes = [
     component: () => import("../views/join")
   },
   {
+    path: "/searchAddr",
+    name: "SearchAddr",
+    component: () => import("../components/searchAddr")
+  },
+  {
     path: "/search/:searchString",
     name: "Search",
     component: () => import("../views/search")

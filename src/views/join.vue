@@ -1,57 +1,68 @@
 <template>
   <div class="join">
+    <searchAddr v-if="isSearchAddrOpened"></searchAddr>
     <div class="container">
       <div class="title"><h1>회원가입</h1></div>
       <div class="content">
-        <form
-          action=""
-          id="joinFrm"
-          name="joinFrm"
-          method="POST"
-          @submit="joinProc"
-        >
+        <form action="" id="joinFrm" name="joinFrm">
           <div class="userBox boxes">
             <input
               type="text"
               id="username"
               v-model="user.username"
-              placeholder="아이디"
+              @keyup="usernameCheck"
+              placeholder="아이디, 영문, 숫자 포함 8~20자"
             />
-            <span class="chkUsername chk"></span>
+            <span class="chkUsername chk">{{ usernameCheckMsg }}</span>
           </div>
           <div class="passwordBox boxes">
             <input
               type="password"
               id="password"
               v-model="user.password"
-              placeholder="비밀번호"
+              @keyup="passwordCheck"
+              placeholder="비밀번호, 영문, 숫자 포함 8~20자"
             />
-            <span class="chkPassword chk"></span>
+            <span class="chkPassword chk">{{ passwordCheckMsg }}</span>
           </div>
           <div class="rePassBox boxes">
             <input
               type="password"
               id="rePassword"
+              v-model="user.password2"
+              @keyup="password2Check"
               placeholder="비밀번호 확인"
             />
-            <span class="chkRePassword chk"></span>
+            <span class="chkRePassword chk">{{ password2CheckMsg }}</span>
           </div>
-          <!-- <div class="nicknameBox boxes">
-            <input type="text" id="nickname" placeholder="별명" />
+          <div class="nicknameBox boxes">
+            <input type="text" id="nickname" placeholder="이름" />
             <span class="chkNickname chk"></span>
-          </div> -->
+          </div>
           <div class="iptAddr">
             <input
               type="text"
               id="addNum"
               placeholder="우편번호"
+              v-model="user.zoneCode"
               readonly
             /><v-btn x-small class="searchAddr" @click="searchAddr"
               >주소검색</v-btn
             >
           </div>
-          <input type="text" id="addr" placeholder="주소" readonly />
-          <input type="text" id="specAddr" placeholder="상세주소" readonly />
+          <input
+            type="text"
+            id="addr"
+            placeholder="주소"
+            v-model="user.address"
+            readonly
+          />
+          <input
+            type="text"
+            id="addrDetail"
+            v-model="user.addrDetail"
+            placeholder="상세주소"
+          />
           <!-- <div class="iptFullname">
             <input type="text" id="fullname" placeholder="이름" readonly />
             <v-btn x-small class="searchName" @click="searchName"
@@ -97,25 +108,123 @@
 
 <script>
 import axios from "axios";
+import searchAddr from "@/components/searchAddr";
+import { eventBus } from "@/main";
 export default {
+  components: { searchAddr },
+  mounted() {
+    eventBus.$on("inputAddr", data => {
+      // console.log(data);
+      this.user.address = data.address;
+      this.user.zoneCode = data.zonecode;
+    });
+    eventBus.$on("closeSearchAddr", () => {
+      this.isSearchAddrOpened = false;
+    });
+  },
   data() {
     return {
+      // 인증 모달 관리
+      isSearchAddrOpened: false,
+      // 회원가입 진행 상태 관리
       isAccountAvailable: false,
       isAccountAuthorized: false,
       isPasswordAvailable: false,
       isPasswordCorrespond: false,
       isNicknameAvailable: false,
+      // 회원가입 정보 관리
       user: {
-        username: null,
-        password: null,
-        password2: null,
-        nickname: null
-      }
+        username: "",
+        password: "",
+        password2: "",
+        nickname: "",
+        zoneCode: "",
+        address: "",
+        addrDetail: ""
+      },
+      // 정규 표현식 관리
+      usernameExp: new RegExp(/^[a-z0-9]/),
+      // 정보 체크 메시지 관리
+      usernameCheckMsg: "",
+      passwordCheckMsg: "",
+      password2CheckMsg: ""
     };
   },
   methods: {
+    // 체크메세지 관련 메소드
+    usernameCheck() {
+      setTimeout(() => {
+        if (this.user.username == "") {
+          this.usernameCheckMsg = "";
+          this.isAccountAvailable = false;
+          return;
+        }
+        if (this.user.username.length < 8) {
+          this.usernameCheckMsg = "아이디는 8자 이상이어야 합니다.";
+          document.querySelector(".chkUsername").style.color = "red";
+          this.isAccountAvailable = false;
+        } else if (this.user.username.length > 20) {
+          this.usernameCheckMsg = "아이디는 20자 이하여야 합니다.";
+          document.querySelector(".chkUsername").style.color = "red";
+          this.isAccountAvailable = false;
+        } else {
+          this.usernameCheckMsg = "사용하실 수 있는 아이디입니다.";
+          document.querySelector(".chkUsername").style.color = "blue";
+          this.isAccountAvailable = true;
+        }
+      }, 1000);
+    },
+    passwordCheck() {
+      setTimeout(() => {
+        if (this.user.password == "") {
+          this.passwordCheckMsg = "";
+          this.isPasswordAvailable = false;
+          return;
+        }
+        if (this.user.password.length < 8) {
+          this.passwordCheckMsg = "비밀번호는 최소 8자리 이상이어야 합니다.";
+          document.querySelector(".chkPassword").style.color = "red";
+          this.isPasswordAvailable = false;
+        } else if (this.user.password.length > 20) {
+          this.passwordCheckMsg = "비밀번호는 최대 20자리 이하여야 합니다.";
+          document.querySelector(".chkPassword").style.color = "red";
+          this.isPasswordAvailable = false;
+        } else {
+          this.passwordCheckMsg = "사용 가능한 비밀번호입니다.";
+          document.querySelector(".chkPassword").style.color = "blue";
+          this.isPasswordAvailable = true;
+        }
+      }, 1000);
+    },
+    password2Check() {
+      setTimeout(() => {
+        if (this.user.password2 == "") {
+          this.password2CheckMsg = "";
+          this.isPasswordCorrespond = false;
+          return;
+        }
+        if (this.user.password !== this.user.password2) {
+          this.password2CheckMsg = "두 비밀번호가 일치하지 않습니다.";
+          document.querySelector(".chkRePassword").style.color = "red";
+          this.isPasswordCorrespond = false;
+        } else {
+          this.password2CheckMsg = "두 비밀번호가 일치합니다.";
+          document.querySelector(".chkRePassword").style.color = "blue";
+          this.isPasswordCorrespond = true;
+        }
+      }, 1000);
+    },
+    // 인증 관련 메소드
     searchAddr() {
-      console.log("searchAddr");
+      // 새창으로 띄울 경우
+      // const routeData = this.$router.resolve({ name: "SearchAddr" });
+      // window.open(
+      //   routeData.href,
+      //   "pop01",
+      //   "top=10, left=10, width=400, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+      // );
+      // 모달로 띄울 경우
+      this.isSearchAddrOpened = true;
     },
     searchName() {
       console.log("searchName");
@@ -123,6 +232,7 @@ export default {
     searchPhone() {
       console.log("searchPhone");
     },
+    // 회원가입 최종 진행 메소드
     joinProc() {
       const { username, password } = this.user;
 
