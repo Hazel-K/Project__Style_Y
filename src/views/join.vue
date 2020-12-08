@@ -10,8 +10,9 @@
               type="text"
               id="username"
               v-model="user.username"
-              @keyup="usernameCheck"
+              @keyup="usernameCheck($event)"
               placeholder="아이디, 영문, 숫자 포함 8~20자"
+              autocomplete="off"
             />
             <span class="chkUsername chk">{{ usernameCheckMsg }}</span>
           </div>
@@ -22,6 +23,7 @@
               v-model="user.password"
               @keyup="passwordCheck"
               placeholder="비밀번호, 영문, 숫자 포함 8~20자"
+              autocomplete="off"
             />
             <span class="chkPassword chk">{{ passwordCheckMsg }}</span>
           </div>
@@ -32,6 +34,7 @@
               v-model="user.password2"
               @keyup="password2Check"
               placeholder="비밀번호 확인"
+              autocomplete="off"
             />
             <span class="chkRePassword chk">{{ password2CheckMsg }}</span>
           </div>
@@ -62,6 +65,7 @@
             id="addrDetail"
             v-model="user.addrDetail"
             placeholder="상세주소"
+            autocomplete="off"
           />
           <!-- <div class="iptFullname">
             <input type="text" id="fullname" placeholder="이름" readonly />
@@ -152,21 +156,72 @@ export default {
   },
   methods: {
     // 체크메세지 관련 메소드
-    usernameCheck() {
+    usernameCheck(e) {
+      const username = document.querySelector("#username");
+      const exeptCode = [
+        27,
+        113,
+        115,
+        120,
+        20,
+        16,
+        17,
+        91,
+        18,
+        32,
+        93,
+        37,
+        38,
+        39,
+        40,
+        44,
+        145,
+        19,
+        45,
+        46,
+        36,
+        35,
+        34,
+        33,
+        13
+      ];
+      for (let i = 0; i < exeptCode.length; i++) {
+        if (e.keyCode == exeptCode[i]) {
+          return;
+        }
+      }
+      const usernameExp = /^[a-z0-9]/;
+      // console.log(usernameExp.test(e.key));
+      if (!usernameExp.test(e.key)) {
+        if (e.keyCode == 8) {
+          return;
+        } else {
+          username.value = "";
+          this.usernameCheckMsg =
+            "한글, 특수문자, 대문자를 사용할 수 없습니다.";
+          document.querySelector(".chkUsername").style.color = "red";
+          this.isAccountAvailable = false;
+          return;
+        }
+      }
       setTimeout(() => {
-        if (this.user.username == "") {
+        if (username.value == "") {
           this.usernameCheckMsg = "";
           this.isAccountAvailable = false;
           return;
         }
-        if (this.user.username.length < 8) {
+        if (username.value.length < 8) {
           this.usernameCheckMsg = "아이디는 8자 이상이어야 합니다.";
           document.querySelector(".chkUsername").style.color = "red";
           this.isAccountAvailable = false;
-        } else if (this.user.username.length > 20) {
+        } else if (username.value.length > 20) {
           this.usernameCheckMsg = "아이디는 20자 이하여야 합니다.";
           document.querySelector(".chkUsername").style.color = "red";
           this.isAccountAvailable = false;
+          // } else if (!usernameExp.test(this.user.username)) {
+          //   this.usernameCheckMsg = "영소문자와 숫자가 조합되어야 합니다.";
+          //   document.querySelector(".chkUsername").style.color = "red";
+          //   this.isAccountAvailable = false;
         } else {
           this.usernameCheckMsg = "사용하실 수 있는 아이디입니다.";
           document.querySelector(".chkUsername").style.color = "blue";
