@@ -48,7 +48,14 @@ export default {
 .items {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  width: 350px;
+  height: 550px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 .title {
   width: 100%;

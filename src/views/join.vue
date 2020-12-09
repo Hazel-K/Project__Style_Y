@@ -1,6 +1,7 @@
 <template>
   <div class="join">
     <searchAddr v-if="isSearchAddrOpened"></searchAddr>
+    <searchPhone v-if="isSearchPhoneOpened"></searchPhone>
     <div class="container">
       <div class="title"><h1>회원가입</h1></div>
       <div class="content">
@@ -39,7 +40,12 @@
             <span class="chkRePassword chk">{{ password2CheckMsg }}</span>
           </div>
           <div class="nicknameBox boxes">
-            <input type="text" id="nickname" placeholder="이름" />
+            <input
+              type="text"
+              id="nickname"
+              v-model="user.fullname"
+              placeholder="이름"
+            />
             <span class="chkNickname chk"></span>
           </div>
           <div class="iptAddr">
@@ -93,6 +99,7 @@
               type="text"
               id="phone"
               placeholder="휴대폰 인증 필수"
+              v-model="user.phone"
               readonly
             />
             <v-btn x-small class="searchPhone" @click="searchPhone"
@@ -113,23 +120,30 @@
 <script>
 import axios from "axios";
 import searchAddr from "@/components/searchAddr";
+import searchPhone from "@/components/searchPhone";
 import { eventBus } from "@/main";
 export default {
-  components: { searchAddr },
+  components: { searchAddr, searchPhone },
   mounted() {
     eventBus.$on("inputAddr", data => {
-      // console.log(data);
       this.user.address = data.address;
       this.user.zoneCode = data.zonecode;
     });
     eventBus.$on("closeSearchAddr", () => {
       this.isSearchAddrOpened = false;
     });
+    eventBus.$on("closeSearchPhone", () => {
+      this.isSearchPhoneOpened = false;
+    });
+    eventBus.$on("sendPhoneNumber", data => {
+      this.user.phone = data;
+    });
   },
   data() {
     return {
       // 인증 모달 관리
       isSearchAddrOpened: false,
+      isSearchPhoneOpened: false,
       // 회원가입 진행 상태 관리
       isAccountAvailable: false,
       isAccountAuthorized: false,
@@ -142,12 +156,14 @@ export default {
         password: "",
         password2: "",
         nickname: "",
+        fullname: "",
         zoneCode: "",
         address: "",
-        addrDetail: ""
+        addrDetail: "",
+        phone: ""
       },
       // 정규 표현식 관리
-      usernameExp: new RegExp(/^[a-z0-9]/),
+      usernameExp: new RegExp(/[a-z0-9]/),
       // 정보 체크 메시지 관리
       usernameCheckMsg: "",
       passwordCheckMsg: "",
@@ -164,11 +180,9 @@ export default {
         115,
         120,
         20,
-        16,
         17,
         91,
         18,
-        32,
         93,
         37,
         38,
@@ -185,24 +199,52 @@ export default {
         33,
         13
       ];
+      const specialChar = [
+        32,
+        106,
+        109,
+        111,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        219,
+        221,
+        222
+      ];
+      const specialChar2 = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
       for (let i = 0; i < exeptCode.length; i++) {
         if (e.keyCode == exeptCode[i]) {
           return;
         }
       }
-      const usernameExp = /^[a-z0-9]/;
-      // console.log(usernameExp.test(e.key));
-      if (!usernameExp.test(e.key)) {
-        if (e.keyCode == 8) {
-          return;
-        } else {
+      for (let i = 0; i < specialChar2.length; i++) {
+        if (e.key == specialChar2[i]) {
           username.value = "";
-          this.usernameCheckMsg =
-            "한글, 특수문자, 대문자를 사용할 수 없습니다.";
+          this.usernameCheckMsg = "특수문자는 입력할 수 없습니다.";
           document.querySelector(".chkUsername").style.color = "red";
           this.isAccountAvailable = false;
           return;
         }
+      }
+      for (let i = 0; i < specialChar.length; i++) {
+        if (e.keyCode == specialChar[i]) {
+          username.value = "";
+          this.usernameCheckMsg = "특수문자는 입력할 수 없습니다.";
+          document.querySelector(".chkUsername").style.color = "red";
+          this.isAccountAvailable = false;
+          return;
+        }
+      }
+      if (e.keyCode == 229) {
+        username.value = "";
+        this.usernameCheckMsg = "한글은 입력하실 수 없습니다.";
+        document.querySelector(".chkUsername").style.color = "red";
+        this.isAccountAvailable = false;
+        return;
       }
       setTimeout(() => {
         if (username.value == "") {
@@ -218,10 +260,6 @@ export default {
           this.usernameCheckMsg = "아이디는 20자 이하여야 합니다.";
           document.querySelector(".chkUsername").style.color = "red";
           this.isAccountAvailable = false;
-          // } else if (!usernameExp.test(this.user.username)) {
-          //   this.usernameCheckMsg = "영소문자와 숫자가 조합되어야 합니다.";
-          //   document.querySelector(".chkUsername").style.color = "red";
-          //   this.isAccountAvailable = false;
         } else {
           this.usernameCheckMsg = "사용하실 수 있는 아이디입니다.";
           document.querySelector(".chkUsername").style.color = "blue";
@@ -285,19 +323,62 @@ export default {
       console.log("searchName");
     },
     searchPhone() {
-      console.log("searchPhone");
+      this.isSearchPhoneOpened = true;
     },
     // 회원가입 최종 진행 메소드
     joinProc() {
-      const { username, password } = this.user;
+      const {
+        username,
+        password,
+        fullname,
+        zoneCode,
+        address,
+        addrDetail,
+        phone
+      } = this.user;
+
+      if (!this.isAccountAvailable) {
+        alert("아이디를 다시 확인해주세요.");
+        return;
+      }
+      if (!this.isPasswordAvailable) {
+        alert("비밀번호를 다시 확인해주세요.");
+        return;
+      }
+      if (!this.isPasswordCorrespond) {
+        alert("비밀번호를 한번 더 입력해주세요.");
+        return;
+      }
+      if (
+        fullname == "" ||
+        zoneCode == "" ||
+        address == "" ||
+        addrDetail == "" ||
+        phone == ""
+      ) {
+        alert("각 칸에 빈 값이 있는지 확인해주세요.");
+        return;
+      }
 
       axios
         .post("/joinProc", {
           username,
-          password
+          password,
+          fullname,
+          zoneCode,
+          address,
+          addrDetail,
+          phone
         })
         .then(function(res) {
-          console.log(res);
+          if (res.data == 1) {
+            alert("회원가입이 완료되었습니다.");
+            this.$router.push({ name: "Index" });
+            return;
+          } else {
+            alert("가입에 실패했습니다. 관리자에게 문의해주세요.");
+            return;
+          }
         });
     }
   }
@@ -308,6 +389,7 @@ export default {
 h1 {
   margin-top: 10px;
 }
+
 input {
   padding: 3px 7px;
   border: 1px solid rgba(0, 0, 0, 0.1);
