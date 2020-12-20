@@ -360,8 +360,8 @@ export default {
         return;
       }
 
-      axios
-        .post("/joinProc", {
+      (async () => {
+        let joinProc = await axios.post("/joinProc", {
           username,
           password,
           fullname,
@@ -369,17 +369,15 @@ export default {
           address,
           addrDetail,
           phone
-        })
-        .then(function(res) {
-          if (res.data == 1) {
-            alert("회원가입이 완료되었습니다.");
-            this.$router.push({ name: "Index" });
-            return;
-          } else {
-            alert("가입에 실패했습니다. 관리자에게 문의해주세요.");
-            return;
-          }
         });
+        if (joinProc.data == 1) {
+          alert("회원가입에 성공하셨습니다.");
+          this.$router.push({ name: "Login" });
+        } else {
+          alert("회원가입에 실패했습니다. 관리자에게 문의해주세요.");
+          return;
+        }
+      })();
     }
   }
 };
