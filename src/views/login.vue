@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   methods: {
     loginProc() {
@@ -47,9 +49,16 @@ export default {
         password.focus();
         return;
       }
-      // document.querySelector("#loginFrm").submit();
-      this.$store.state.user.isLogined = true;
-      this.$router.push({ name: "Index" });
+
+      (async () => {
+        let loginProc = await axios.post("/login", {
+          username: username.value,
+          password: password.value
+        });
+        console.log(loginProc);
+      })();
+      // this.$store.state.user.isLogined = true;
+      // this.$router.push({ name: "Index" });
     }
   }
 };
