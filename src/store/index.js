@@ -20,7 +20,20 @@ export default new Vuex.Store({
     // 유저 정보 컨트롤
     user: {
       isLogined: false,
-      isAdmin: false
+      isAdmin: false,
+
+      id: "",
+      username: "",
+      password: "",
+      roles: "",
+      nickname: "유저",
+      fullname: "",
+      zoneCode: "",
+      address: "",
+      addrDetail: "",
+      idNumber: "",
+      phone: "",
+      email: ""
     }
   },
   mutations: {},

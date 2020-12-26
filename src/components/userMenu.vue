@@ -3,7 +3,9 @@
     <div class="info">
       <div class="userInfo">
         <img class="userImg" src="@/assets/userImg.png" alt="" />
-        <span class="welcomeMsg">{{ user }}님, 환영합니다.</span>
+        <span class="welcomeMsg"
+          >{{ $store.state.user.nickname }}님, 환영합니다.</span
+        >
       </div>
       <div class="menus ChkUser" @click="openMenus(0)">
         <span class="menuIcon material-icons">face</span>
@@ -45,11 +47,6 @@
 import { eventBus } from "@/main";
 
 export default {
-  data() {
-    return {
-      user: "유저"
-    };
-  },
   methods: {
     openMenus(num) {
       const menus = document.getElementsByClassName("menus");

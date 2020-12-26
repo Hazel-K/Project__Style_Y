@@ -17,19 +17,15 @@ export default {
     });
     eventBus.$on("logout", () => {
       this.$store.state.user.isLogined = false;
+      localStorage.removeItem("authorization");
       if (this.$route.name !== "Index") {
         this.$router.push({ name: "Index" });
       }
       eventBus.$emit("closeNav");
     });
-    // eventBus.$on("wrongAccess", () => {
-    //   alert("잘못된 접근입니다.");
-    //   this.$router.push({ name: "Index" });
-    // });
   },
   mounted() {
     document.addEventListener("click", e => {
-      // console.log(e.target.className);
       const eventList = [
         "material-icons icon__2-1",
         "material-icons icon__2-2",

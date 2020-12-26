@@ -15,6 +15,7 @@
             id="password"
             name="password"
             placeholder="비밀번호"
+            @keyup.enter="loginProc"
           />
           <a href="/find" class="forgetPassword">비밀번호를 잊으셨나요?</a>
         </form>
@@ -36,10 +37,18 @@
 import axios from "axios";
 
 export default {
+  data() {
+    return {
+      errMsg: ""
+    };
+  },
   methods: {
     loginProc() {
       const username = document.querySelector("#username");
       const password = document.querySelector("#password");
+      const AUTH = "authorization";
+      let loginProc = "";
+
       if (username.value == "") {
         alert("아이디를 입력해주세요.");
         username.focus();
@@ -51,14 +60,30 @@ export default {
       }
 
       (async () => {
-        let loginProc = await axios.post("/login", {
-          username: username.value,
-          password: password.value
-        });
-        console.log(loginProc);
+        try {
+          loginProc = await axios.post("/login", {
+            username: username.value,
+            password: password.value
+          });
+        } catch {
+          this.errMsg = "아이디, 비밀번호를 확인해주세요.";
+          alert(this.errMsg);
+        }
+        if (loginProc == "") {
+          this.errMsg = "";
+          return;
+        } else {
+          console.log(loginProc);
+          localStorage.setItem(AUTH, loginProc.headers.authorization);
+          this.$store.state.user.isLogined = true;
+          if (this.$store.state.dynamicMenus.navBar.isOpened) {
+            this.$store.state.dynamicMenus.navBar.isOpened = !this.$store.state
+              .dynamicMenus.navBar.isOpened;
+          }
+          this.$router.push({ name: "Index" });
+          return;
+        }
       })();
-      // this.$store.state.user.isLogined = true;
-      // this.$router.push({ name: "Index" });
     }
   }
 };
