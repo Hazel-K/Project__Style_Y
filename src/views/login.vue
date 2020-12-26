@@ -75,6 +75,8 @@ export default {
         } else {
           console.log(loginProc);
           localStorage.setItem(AUTH, loginProc.headers.authorization);
+          // let user = JSON.parse(loginProc.headers.user);
+          // console.log(user);
           this.$store.state.user.isLogined = true;
           if (this.$store.state.dynamicMenus.navBar.isOpened) {
             this.$store.state.dynamicMenus.navBar.isOpened = !this.$store.state
