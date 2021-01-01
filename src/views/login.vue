@@ -46,7 +46,6 @@ export default {
     loginProc() {
       const username = document.querySelector("#username");
       const password = document.querySelector("#password");
-      const AUTH = "authorization";
       let loginProc = "";
 
       if (username.value == "") {
@@ -74,14 +73,11 @@ export default {
           return;
         } else {
           console.log(loginProc);
-          localStorage.setItem(AUTH, loginProc.headers.authorization);
-          // let user = JSON.parse(loginProc.headers.user);
-          // console.log(user);
-          this.$store.state.user.isLogined = true;
-          if (this.$store.state.dynamicMenus.navBar.isOpened) {
-            this.$store.state.dynamicMenus.navBar.isOpened = !this.$store.state
-              .dynamicMenus.navBar.isOpened;
-          }
+          localStorage.setItem(
+            this.$store.state.auth,
+            loginProc.headers.authorization
+          );
+          this.$store.dispatch("findByUsername");
           this.$router.push({ name: "Index" });
           return;
         }

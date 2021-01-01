@@ -16,13 +16,17 @@ export default {
       this.$store.state.dynamicMenus.navBar.isOpened = false;
     });
     eventBus.$on("logout", () => {
-      this.$store.state.user.isLogined = false;
-      localStorage.removeItem("authorization");
+      this.$store.commit("clearUser");
       if (this.$route.name !== "Index") {
         this.$router.push({ name: "Index" });
       }
       eventBus.$emit("closeNav");
     });
+
+    // 토큰을 활용한 유저 정보 가져오기
+    if (localStorage.getItem(this.$store.state.auth) != undefined) {
+      this.$store.dispatch("findByUsername");
+    }
   },
   mounted() {
     document.addEventListener("click", e => {

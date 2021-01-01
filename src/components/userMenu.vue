@@ -4,7 +4,7 @@
       <div class="userInfo">
         <img class="userImg" src="@/assets/userImg.png" alt="" />
         <span class="welcomeMsg"
-          >{{ $store.state.user.nickname }}님, 환영합니다.</span
+          >{{ $store.state.user.fullname }}님, 환영합니다.</span
         >
       </div>
       <div class="menus ChkUser" @click="openMenus(0)">
